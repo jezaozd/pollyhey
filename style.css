@@ -1,6 +1,6 @@
 :root{
   --ivory:#F4F0E7; --paper:#FBF9F4; --ink:#15120E; --green:#12241D; --green2:#0D1B16;
-  --gold:#8C7340; --gold-l:#C8B282; --mute:#5E574B; --line:rgba(21,18,14,.2); --line-l:rgba(244,240,231,.24);
+  --gold:#77602F; --gold-l:#C8B282; --mute:#5E574B; --line:rgba(21,18,14,.2); --line-l:rgba(244,240,231,.24);
   --serif:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
   --sans:"Tenor Sans","Jost",system-ui,sans-serif;
   --ease:cubic-bezier(.22,.7,.12,1);

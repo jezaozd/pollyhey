@@ -120,7 +120,8 @@ a.lnk:hover,a:hover>.lnk{color:var(--red)}
 .duo-b{color:#fff}
 .duo-b img{position:absolute;inset:0;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
 .duo-b:hover img{transform:scale(1.05)}
-.duo-b div{position:relative;display:grid;gap:10px;justify-items:start}
+.duo-b::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,18,17,0) 30%,rgba(19,18,17,.72))}
+.duo-b div{position:relative;z-index:1;display:grid;gap:10px;justify-items:start}
 .duo-b .it{color:#fff}
 .duo-b h3{font-size:clamp(60px,9vw,140px)}
 

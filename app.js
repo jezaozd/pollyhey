@@ -13,65 +13,33 @@
   function onScroll() { hd.classList.toggle('solid', window.scrollY > 40); }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  /* стол: на десктопе — перетаскивание, на телефоне — колода */
-  var stack = $('#stack'), prints = $$('.print', stack);
-  var desk = window.matchMedia('(min-width:1000px) and (hover:hover)');
-  var top = 10;
-  prints.forEach(function (p, i) {
-    p.style.setProperty('--i', i);
-    p.style.zIndex = i + 1;
-    var sx, sy, ox = 0, oy = 0, on = false, moved = false;
+  /* большое яйцо: открывается само, дальше — по нажатию */
+  var great = $('#great'), hint = $('.egg-hint');
+  setTimeout(function () { great.classList.add('open'); }, 900);
+  great.addEventListener('click', function () {
+    great.classList.toggle('open');
+    if (hint) hint.style.visibility = 'hidden';
+  });
 
-    p.addEventListener('pointerdown', function (e) {
-      if (!desk.matches) return;
-      on = true; moved = false; sx = e.clientX; sy = e.clientY;
-      p.setPointerCapture(e.pointerId); p.classList.add('drag'); p.style.zIndex = ++top;
-      p.style.animation = 'none';
-    });
-    p.addEventListener('pointermove', function (e) {
-      if (!on) return;
-      var dx = e.clientX - sx, dy = e.clientY - sy;
-      if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
-      p.style.setProperty('--tx', ox + dx + 'px'); p.style.setProperty('--ty', oy + dy + 'px');
-    });
-    function up(e) {
-      if (!on) return; on = false;
-      ox += e.clientX - sx; oy += e.clientY - sy;
-      p.classList.remove('drag');
-      if (moved) p.style.setProperty('--r', (Math.random() * 14 - 7).toFixed(1) + 'deg');
-    }
-    p.addEventListener('pointerup', up); p.addEventListener('pointercancel', up);
-
-    p.addEventListener('click', function () {
-      if (desk.matches) return;
-      var last = stack.lastElementChild;      /* верхняя карточка уходит под низ */
-      if (last.classList.contains('away')) return;
-      last.classList.add('away');
+  /* коллекция: яйцо раскрывается, сюрприз — в ларце */
+  var dlg = $('#dlg'), dlgin = $('#dlgin'), current = null;
+  $$('.lot').forEach(function (lot) {
+    var egg = $('button.egg', lot), d = $('.lot-d', lot);
+    if (!egg || !d) return;
+    egg.addEventListener('click', function () {
+      if (current) return;
+      current = egg; egg.classList.add('open');
       setTimeout(function () {
-        stack.insertBefore(last, stack.firstElementChild);
-        $$('.print', stack).forEach(function (q, k) { q.style.zIndex = k + 1; });
-        last.offsetWidth; last.classList.remove('away');
-      }, 420);
+        dlgin.innerHTML = d.innerHTML;
+        if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+        dlg.scrollTop = 0;
+      }, 520);
     });
   });
-
-  /* проекты: открыт только один, картинка следует за курсором */
-  var items = $$('#pj details'), peek = $('#peek');
-  items.forEach(function (d) {
-    d.addEventListener('toggle', function () {
-      if (d.open) items.forEach(function (o) { if (o !== d) o.open = false; });
-      peek.classList.remove('on');
-    });
-    var s = $('summary', d);
-    s.addEventListener('pointerenter', function () {
-      if (!desk.matches || d.open) return;
-      peek.src = d.dataset.img; peek.classList.add('on');
-    });
-    s.addEventListener('pointerleave', function () { peek.classList.remove('on'); });
+  function closeDlg() { if (dlg.open) dlg.close(); }
+  dlg.addEventListener('close', function () {
+    if (current) { current.classList.remove('open'); current.focus(); current = null; }
   });
-  window.addEventListener('pointermove', function (e) {
-    if (!peek.classList.contains('on')) return;
-    peek.style.setProperty('--px', Math.min(e.clientX + 30, window.innerWidth * 0.8) + 'px');
-    peek.style.setProperty('--py', e.clientY - 120 + 'px');
-  }, { passive: true });
+  $('#dlgx').addEventListener('click', closeDlg);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) closeDlg(); });
 })();
